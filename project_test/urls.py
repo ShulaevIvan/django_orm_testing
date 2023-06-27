@@ -20,11 +20,18 @@ from demo.views import create_car
 from demo.views import list_car
 from demo.views import  create_person
 from demo.views import list_persons
+from demo.views import list_orders
+from demo.views import DemoApi
+# from demo.views import  Demo_api
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('newcar/', create_car),
     path('list_car/', list_car),
     path('create_person/', create_person),
-    path('list_presons/', list_persons)
+    path('list_presons/', list_persons),
+    path('orders/', list_orders),
+    # path('test_api/', demo_api),
+    # path('test_api/', Demo_api.as_view()),
+    path('test_api/<pk>/', DemoApi.as_view()),
 ]

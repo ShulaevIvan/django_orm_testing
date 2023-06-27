@@ -1,6 +1,12 @@
 from django.shortcuts import render
 from django.http import HttpResponse
-from demo.models import Car, Person
+from rest_framework.response import Response
+from rest_framework.decorators import api_view
+from rest_framework.views import APIView
+from rest_framework.generics import ListAPIView, RetrieveAPIView
+from demo.models import Car, Person, Order
+from .models import Weapon
+from .serializers import WeaponSerializer
 import random
 
 # Create your views here.
@@ -30,3 +36,48 @@ def list_persons(request):
     persons_objects = Person.objects.all()
     persons = [f'{p.name}, {p.car}' for p in persons_objects] 
     return HttpResponse('<br>'.join(persons))
+
+
+def list_orders(request):
+    # context = {
+    #     'orders': Order.objects.all()
+    # }
+    context = {
+        'orders': Order.objects.filter(positions__product__price__lte=500)
+        # 'orders': Order.objects.filter(positions__product__price__gte=500)
+    }
+    return render(request, 'orders.html', context)
+
+# @api_view(['GET', 'POST'])
+# def demo_api(request):
+#     if request.method == 'GET':
+#         weapons = Weapon.objects.all()
+#         ser = WeaponSerializer(weapons, many=True)
+#         return Response(ser.data)
+    
+#     if request.method == 'POST':
+#         print(request)
+#         return Response({'status': 'ok'})
+
+
+# class Demo_api(APIView):
+#     def get(self, request):
+#         weapons = Weapon.objects.all()
+#         ser = WeaponSerializer(weapons, many=True)
+#         return Response(ser.data)
+#     def post(self, request):
+#         print(request)
+#         return Response({'status': 'ok'})
+
+# class DemoApi(ListAPIView):
+#     queryset = Weapon.objects.all()
+#     serializer_class = WeaponSerializer
+
+#     def post(self, request):
+#         return Response({'status': 'ok'})
+
+
+
+class DemoApi(RetrieveAPIView):
+    queryset = Weapon.objects.all()
+    serializer_class = WeaponSerializer
